@@ -27,31 +27,26 @@ def backward():
     else:
         current_r -= 1
 
-def set_number(q, a):
+def set_number(a):
     if a[current_l][current_r] != 0:
         # 最初から番号が設定されているマスなので次のマスに進む
         r = forward()
         if r is False:
             # 右下までいったのでreturn
             return True
-        r = set_number(q, a)
+        r = set_number(a)
         backward()
         return r
     else:
+        block_start_l = int(current_l / 3) * 3
+        block_start_r = int(current_r / 3) * 3
+        already_used_nums = np.hstack((a[current_l],
+                                       a[:, current_r],
+                                       a[block_start_l:block_start_l+3, block_start_r:block_start_r+3].flatten()))
+        already_used_nums = np.unique(already_used_nums)
         for check_num in range(1, 10):
-            if_ok = True
             # 横方向に同じ番号が設定されていないか確認
-            if check_num in a[current_l]:
-                continue
-
-            # 縦方向に同じ番号が設定されていないか確認
-            if check_num in a[:, current_r]:
-                continue
-
-            # 今のマスが含まれる3x3のブロックに同じ番号が設定されていないか確認
-            start_l = int(current_l / 3) * 3
-            start_r = int(current_r / 3) * 3
-            if check_num in a[start_l:start_l+3, start_r:start_r+3]:
+            if check_num in already_used_nums:
                 continue
 
             # 同じ番号が設定されていなければマスに番号を設定して次のマスに進む
@@ -59,7 +54,7 @@ def set_number(q, a):
             r = forward()
             if r is False:
                 return True
-            r = set_number(q, a)
+            r = set_number(a)
             backward()
             if r is True:
                 return r
@@ -73,7 +68,7 @@ def set_number(q, a):
 
 def solve_sudoku(q):
     a = np.copy(q)
-    set_number(q, a)
+    set_number(a)
     print(a)
     print(np.unique(a, axis=0).shape)
     print(np.unique(a, axis=1).shape)
