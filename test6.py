@@ -41,33 +41,17 @@ def set_number(q, a):
         for check_num in range(1, 10):
             if_ok = True
             # 横方向に同じ番号が設定されていないか確認
-            for k in range(9):
-                if a[current_l][k] == check_num:
-                    if_ok = False
-                    break
-
-            if if_ok is False:
+            if check_num in a[current_l]:
                 continue
 
             # 縦方向に同じ番号が設定されていないか確認
-            for k in range(9):
-                if a[k][current_r] == check_num:
-                    if_ok = False
-                    break
-
-            if if_ok is False:
+            if check_num in a[:, current_r]:
                 continue
 
             # 今のマスが含まれる3x3のブロックに同じ番号が設定されていないか確認
             start_l = int(current_l / 3) * 3
             start_r = int(current_r / 3) * 3
-            for i in range(start_l, start_l+3):
-                for j in range(start_r, start_r+3):
-                    if a[i][j] == check_num:
-                        if_ok = False
-                        break
-
-            if if_ok is False:
+            if check_num in a[start_l:start_l+3, start_r:start_r+3]:
                 continue
 
             # 同じ番号が設定されていなければマスに番号を設定して次のマスに進む

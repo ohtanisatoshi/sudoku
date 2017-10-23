@@ -47,8 +47,8 @@ class NeuralNet(chainer.Chain):
                 diff_total += (y.data[0][i] - y.data[0][j]) ** 2
         loss = (#F.sum(F.square((y * mask) - x)) +
                 #F.square(sum_0 - 45.) + 
-                #F.log(F.square(prod_0 - 362880.) + 1e-8))
-                F.log(F.square(diff_total - 540.0) + 1e-8))
+                F.log(F.square(prod_0 - 362880.) + 1e-8))
+                #F.log(F.square(diff_total - 540.0) + 1e-8))
         return loss
 
     def fwd(self, x):
@@ -92,7 +92,7 @@ def main():
 
     model = NeuralNet()
 
-    optimizer = chainer.optimizers.Adam(alpha=1e-4)
+    optimizer = chainer.optimizers.Adam(alpha=1e-2)
     optimizer.setup(model)
 
     epoch = 50000
